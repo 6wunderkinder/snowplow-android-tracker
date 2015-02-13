@@ -13,28 +13,18 @@
 
 package com.snowplowanalytics.snowplow.tracker.utils.payload;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import com.snowplowanalytics.snowplow.tracker.Payload;
-import com.snowplowanalytics.snowplow.tracker.utils.Util;
 import com.snowplowanalytics.snowplow.tracker.utils.Logger;
+import com.snowplowanalytics.snowplow.tracker.utils.Util;
 
 public class TrackerPayload implements Payload {
 
     private final String TAG = TrackerPayload.class.getSimpleName();
-    private final ObjectMapper objectMapper = Util.getObjectMapper();
-    private ObjectNode objectNode = objectMapper.createObjectNode();
+    private HashMap<String, Object> map = new HashMap<>();
 
     @Override
     public void add(String key, String value) {
@@ -44,7 +34,7 @@ public class TrackerPayload implements Payload {
         }
 
         Logger.ifDebug(TAG, "Adding new key-value pair: " + key + "->" + value);
-        objectNode.put(key, value);
+        map.put(key, value);
     }
 
     @Override
@@ -55,11 +45,7 @@ public class TrackerPayload implements Payload {
         }
 
         Logger.ifDebug(TAG, "Adding new key-value pair: " + key + "->" + value);
-        try {
-            objectNode.putPOJO(key, objectMapper.writeValueAsString(value));
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
+        map.put(key, value);
     }
 
     @Override
@@ -71,7 +57,7 @@ public class TrackerPayload implements Payload {
         }
 
         Set<String> keys = map.keySet();
-        for(String key : keys) {
+        for (String key : keys) {
             add(key, map.get(key));
         }
     }
@@ -84,43 +70,22 @@ public class TrackerPayload implements Payload {
             return;
         }
 
-        String mapString;
-        try {
-            mapString = objectMapper.writeValueAsString(map);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return; // Return because we can't continue
-        }
-
+        String mapString = Util.serializeMap(map);
         if (base64_encoded) { // base64 encoded data
-            objectNode.put(type_encoded, Util.base64Encode(mapString));
+            map.put(type_encoded, Util.base64Encode(mapString));
         } else { // add it as a child node
             add(type_no_encoded, mapString);
         }
     }
 
-    public JsonNode getNode() {
-        return objectNode;
-    }
-
     @Override
     public Map getMap() {
         HashMap<String, String> map = new HashMap<String, String>();
-        try {
-            Logger.ifDebug(TAG, "Attempting to create a Map structure from ObjectNode.");
-            map = objectMapper.readValue(objectNode.toString(), new TypeReference<Map>(){});
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
-        } catch (JsonParseException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         return map;
     }
 
     @Override
     public String toString() {
-        return objectNode.toString();
+        return Util.serializeMap(map);
     }
 }

@@ -13,11 +13,10 @@
 
 package com.snowplowanalytics.snowplow.tracker.utils;
 
-import android.util.Base64;
-
+import java.util.Map;
 import java.util.UUID;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import android.util.Base64;
 
 /**
  * Provides basic Utilities for the
@@ -25,14 +24,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class Util {
 
-    private static ObjectMapper objectMapper = new ObjectMapper();
-
-    /**
-     * @return returns a default ObjectMapper
-     */
-    public static ObjectMapper getObjectMapper() {
-        return objectMapper;
-    }
 
     /**
      * Returns the current System time
@@ -63,4 +54,10 @@ public class Util {
     public static String getEventId() {
         return UUID.randomUUID().toString();
     }
+
+    public static String serializeMap(Map map) {
+        return "";
+    }
+
+
 }
