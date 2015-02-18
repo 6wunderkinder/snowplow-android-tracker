@@ -18,6 +18,7 @@ import java.util.Map;
 
 import com.snowplowanalytics.snowplow.tracker.Payload;
 import com.snowplowanalytics.snowplow.tracker.constants.Parameters;
+import com.snowplowanalytics.snowplow.tracker.utils.JsonUtils;
 import com.snowplowanalytics.snowplow.tracker.utils.Logger;
 import com.snowplowanalytics.snowplow.tracker.utils.Preconditions;
 import com.snowplowanalytics.snowplow.tracker.utils.Util;
@@ -68,7 +69,7 @@ public class SelfDescribingJson implements Payload {
         if (data == null) {
             return this;
         }
-        map.put(Parameters.DATA, data.getMap());
+        map.put(Parameters.DATA, data.toString());
         return this;
     }
 
@@ -81,7 +82,7 @@ public class SelfDescribingJson implements Payload {
         if (data == null) {
             return this;
         }
-        map.put(Parameters.DATA, data);
+        map.put(Parameters.DATA, JsonUtils.wrap(data).toString());
         return this;
     }
 

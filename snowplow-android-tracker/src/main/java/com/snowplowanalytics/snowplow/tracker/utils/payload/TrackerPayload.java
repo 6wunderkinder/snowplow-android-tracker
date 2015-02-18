@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.snowplowanalytics.snowplow.tracker.Payload;
+import com.snowplowanalytics.snowplow.tracker.utils.JsonUtils;
 import com.snowplowanalytics.snowplow.tracker.utils.Logger;
 import com.snowplowanalytics.snowplow.tracker.utils.Util;
 
@@ -45,7 +46,7 @@ public class TrackerPayload implements Payload {
         }
 
         Logger.ifDebug(TAG, "Adding new key-value pair: " + key + "->" + value);
-        map.put(key, Util.wrap(value));
+        map.put(key, JsonUtils.wrap(value));
     }
 
     @Override
