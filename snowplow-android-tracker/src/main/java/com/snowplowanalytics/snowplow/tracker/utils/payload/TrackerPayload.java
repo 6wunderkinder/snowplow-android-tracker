@@ -45,7 +45,7 @@ public class TrackerPayload implements Payload {
         }
 
         Logger.ifDebug(TAG, "Adding new key-value pair: " + key + "->" + value);
-        map.put(key, value);
+        map.put(key, Util.wrap(value));
     }
 
     @Override
@@ -72,7 +72,7 @@ public class TrackerPayload implements Payload {
 
         String mapString = Util.serializeMap(map);
         if (base64_encoded) { // base64 encoded data
-            map.put(type_encoded, Util.base64Encode(mapString));
+            add(type_encoded, Util.base64Encode(mapString));
         } else { // add it as a child node
             add(type_no_encoded, mapString);
         }
