@@ -81,7 +81,6 @@ public class TrackerPayload implements Payload {
 
     @Override
     public Map getMap() {
-        HashMap<String, String> map = new HashMap<String, String>();
         return map;
     }
 

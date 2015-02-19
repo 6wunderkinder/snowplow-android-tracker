@@ -69,9 +69,10 @@ public class SelfDescribingJson implements Payload {
         if (data == null) {
             return this;
         }
-        map.put(Parameters.DATA, data.toString());
+        map.put(Parameters.DATA, JsonUtils.wrap(data.getMap()));
         return this;
     }
+
 
     /**
      * Adds data to the SelfDescribingJson
@@ -82,8 +83,21 @@ public class SelfDescribingJson implements Payload {
         if (data == null) {
             return this;
         }
-        map.put(Parameters.DATA, JsonUtils.wrap(data).toString());
+        map.put(Parameters.DATA, JsonUtils.wrap(data));
         return this;
+    }
+
+    /**
+     * Allows us to add data from one SelfDescribingJson into another
+     * without copying over the Schema.
+     *
+     * @param payload the payload to add to the SelfDescribingJson
+     */
+    private void setData(SelfDescribingJson payload) {
+        if (payload == null) {
+            return;
+        }
+        map.put(Parameters.DATA, JsonUtils.wrap(payload.getMap()));
     }
 
 
