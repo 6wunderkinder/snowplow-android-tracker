@@ -64,8 +64,6 @@ public class SelfDescribingJsonTest extends AndroidTestCase {
         SelfDescribingJson selfDJson = new SelfDescribingJson(SCHEMA, getSelfDescribingJson());
         JacksonSelfDescribingJson referenceSelfDescrJson = new JacksonSelfDescribingJson(SCHEMA,
                 getJacksonSelfDescribingJson());
-        System.out.println("xkcd ref: " + referenceSelfDescrJson.toString());
-        System.out.println("xkcd cur: " + selfDJson.toString());
         assertJsonEquals(referenceSelfDescrJson.toString(), selfDJson.toString());
     }
 
